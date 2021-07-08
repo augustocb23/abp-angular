@@ -1,0 +1,28 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col col-md-6">
+        <h5 class="card-title">
+          {{ '::Menu:Orders' | abpLocalization }}
+        </h5>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <ngx-datatable [count]="orders?.totalCount" [list]="list" [loadingIndicator]="list.isLoading$ | async"
+                   [rows]="orders?.items" default>
+      <ngx-datatable-column [name]="'::Orders:ClientName' | abpLocalization" prop="clientId">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ getClientName(value) | async }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column [name]="'::Orders:Date' | abpLocalization" prop="creationTime">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ value | date:'medium' }}
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
