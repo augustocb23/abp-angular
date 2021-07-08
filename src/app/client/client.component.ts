@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { ListService, PagedResultDto } from '@abp/ng.core';
 
 import { ClientDto, ClientEditDto, ClientService } from '@proxy/orders';
+import { Confirmation, ConfirmationService } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'app-client',
@@ -18,7 +19,8 @@ export class ClientComponent implements OnInit {
   isModalOpen: boolean;
   @ViewChild('form') form: NgForm;
 
-  constructor(public readonly list: ListService, private service: ClientService) {
+  constructor(public readonly list: ListService, private service: ClientService,
+              private confirmation: ConfirmationService) {
   }
 
   ngOnInit() {
@@ -40,6 +42,15 @@ export class ClientComponent implements OnInit {
       .subscribe((dto) => {
         this.client = dto as ClientEditDto;
         this.isModalOpen = true;
+      });
+  }
+
+  delete(id: string) {
+    this.confirmation.warn('::AreYouSureToDelete', '::Confirmation')
+      .subscribe((status) => {
+        if (status === Confirmation.Status.confirm) {
+          this.service.delete(id).subscribe(() => this.list.get());
+        }
       });
   }
 

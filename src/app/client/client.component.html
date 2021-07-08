@@ -25,9 +25,12 @@
 
       <ngx-datatable-column [name]="'::Actions' | abpLocalization" [maxWidth]="150" [sortable]="false">
         <ng-template let-row="row" ngx-datatable-cell-template>
-          <div class="btn-group-sm">
+          <div class="btn-group btn-group-sm">
             <button (click)="edit(row.id)" [title]="'::Edit' | abpLocalization" class="btn btn-outline-primary">
               <i class="fa fa-pen"></i>
+            </button>
+            <button (click)="delete(row.id)" [title]="'::Delete' | abpLocalization" class="btn btn-outline-danger">
+              <i class="fa fa-trash"></i>
             </button>
           </div>
         </ng-template>
