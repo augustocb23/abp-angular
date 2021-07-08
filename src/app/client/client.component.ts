@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ClientDto, ClientService } from '@proxy/orders';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+
 import { ListService, PagedResultDto } from '@abp/ng.core';
+
+import { ClientDto, ClientEditDto, ClientService } from '@proxy/orders';
 
 @Component({
   selector: 'app-client',
@@ -9,17 +12,49 @@ import { ListService, PagedResultDto } from '@abp/ng.core';
   providers: [ListService]
 })
 export class ClientComponent implements OnInit {
-  client: PagedResultDto<ClientDto>;
+  clients: PagedResultDto<ClientDto>;
 
-  constructor(public readonly list: ListService, private clientService: ClientService) {
+  client = {} as ClientEditDto;
+  isModalOpen: boolean;
+  @ViewChild('form') form: NgForm;
+
+  constructor(public readonly list: ListService, private service: ClientService) {
   }
 
   ngOnInit() {
-    const clientStreamCreator = (query) => this.clientService.getList(query);
+    const clientStreamCreator = (query) => this.service.getList(query);
 
     this.list.hookToQuery(clientStreamCreator)
       .subscribe((response) => {
-        this.client = response;
+        this.clients = response;
       });
+  }
+
+  create() {
+    this.client = {} as ClientEditDto;
+    this.isModalOpen = true;
+  }
+
+  edit(id: string) {
+    this.service.get(id)
+      .subscribe((dto) => {
+        this.client = dto as ClientEditDto;
+        this.isModalOpen = true;
+      });
+  }
+
+  save() {
+    if (this.form.invalid) {
+      return;
+    }
+
+    const request = this.client.id ?
+      this.service.update(this.client.id, this.client) :
+      this.service.create(this.client);
+
+    request.subscribe(() => {
+      this.isModalOpen = false;
+      this.list.get();
+    });
   }
 }

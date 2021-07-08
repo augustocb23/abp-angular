@@ -16,14 +16,14 @@ function configureRoutes(routesService: RoutesService) {
         layout: eLayoutType.application,
       },
       {
-        path: '/client-store',
+        path: '/clients-store',
         name: '::Menu:Clients',
         iconClass: 'fas fa-users',
         order: 2,
         layout: eLayoutType.application,
       },
       {
-        path: '/client',
+        path: '/clients',
         name: '::Menu:Clients:List',
         parentName: '::Menu:Clients',
         layout: eLayoutType.application,
