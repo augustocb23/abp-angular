@@ -1,0 +1,10 @@
+.container {
+  & h2 {
+    color: midnightblue;
+    text-transform: uppercase;
+  }
+
+  & a {
+    cursor: pointer;
+  }
+}

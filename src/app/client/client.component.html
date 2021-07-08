@@ -1,0 +1,18 @@
+<div class='card'>
+  <div class='card-header'>
+    <div class='row'>
+      <div class='col col-md-6'>
+        <h5 class='card-title'>
+          {{ '::Menu:Clients' | abpLocalization }}
+        </h5>
+      </div>
+      <div class='text-right col col-md-6'></div>
+    </div>
+  </div>
+  <div class='card-body'>
+    <ngx-datatable [count]='client?.totalCount' [list]='list' [loadingIndicator]='list.isLoading$ | async'
+                   [rows]='client?.items' default>
+      <ngx-datatable-column [name]="'::FullName' | abpLocalization" prop='fullName'></ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
