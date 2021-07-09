@@ -1,0 +1,11 @@
+<div class="scroll-vertical">
+  <ngx-datatable [loadingIndicator]="isLoading" [rows]="items" default>
+    <ngx-datatable-column [name]="'::Orders:Quantity' | abpLocalization" prop="quantity"></ngx-datatable-column>
+
+    <ngx-datatable-column [name]="'::Orders:ProductName' | abpLocalization" prop="productId" [sortable]="false">
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ getProductName(value) | async }}
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>

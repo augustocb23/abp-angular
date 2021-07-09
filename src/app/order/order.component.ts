@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ListService, PagedResultDto } from '@abp/ng.core';
 
 import { ClientService, OrderDto, OrderService } from '@proxy/orders';
-import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { fetchWithCache } from '../shared/fetch-with-cache';
 
 @Component({
   selector: 'app-order',
@@ -13,9 +15,10 @@ import { map, tap } from 'rxjs/operators';
   providers: [ListService]
 })
 export class OrderComponent implements OnInit {
+  @ViewChild('table') table: any;
   orders: PagedResultDto<OrderDto>;
 
-  clientNames = new Map<string, Observable<string>>();
+  private clientNames = new Map<string, Observable<string>>();
 
   constructor(public readonly list: ListService, private service: OrderService,
               private clientService: ClientService) {
@@ -30,19 +33,14 @@ export class OrderComponent implements OnInit {
       });
   }
 
-  getClientName(id: string): Observable<string> {
-    const cachedValue = this.clientNames.get(id);
-    if (cachedValue) {
-      return cachedValue;
-    }
+  getClientName(clientId: string): Observable<string> {
+    const fetchObservable = this.clientService.get(clientId)
+      .pipe(map(client => client.fullName));
 
-    const fetchObservable = this.clientService.get(id)
-      .pipe(
-        map(client => client.fullName),
-        tap(clientName => this.clientNames.set(id, of(clientName)))
-      );
-    this.clientNames.set(id, fetchObservable);
+    return fetchWithCache(fetchObservable, this.clientNames, clientId);
+  }
 
-    return fetchObservable;
+  toggleExpandRow(order: OrderDto) {
+    this.table.rowDetail.toggleExpandRow(order);
   }
 }

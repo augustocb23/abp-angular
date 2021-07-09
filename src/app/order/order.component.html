@@ -9,17 +9,33 @@
     </div>
   </div>
   <div class="card-body">
-    <ngx-datatable [count]="orders?.totalCount" [list]="list" [loadingIndicator]="list.isLoading$ | async"
-                   [rows]="orders?.items" default>
-      <ngx-datatable-column [name]="'::Orders:ClientName' | abpLocalization" prop="clientId">
-        <ng-template let-value="value" ngx-datatable-cell-template>
-          {{ getClientName(value) | async }}
+    <ngx-datatable #table [count]="orders?.totalCount" [list]="list" [loadingIndicator]="list.isLoading$ | async"
+                   [rows]="orders?.items" [sorts]="[{prop:'creationTime', dir: 'desc'}]" default>
+      <ngx-datatable-row-detail [rowHeight]="300">
+        <ng-template let-row="row" ngx-datatable-row-detail-template>
+          <app-order-items [orderId]="row.id"></app-order-items>
+        </ng-template>
+      </ngx-datatable-row-detail>
+
+      <ngx-datatable-column [canAutoResize]="false" [draggable]="false" [resizeable]="false" [sortable]="false"
+                            [width]="50">
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+          <a (click)="toggleExpandRow(row)" [class.datatable-icon-down]="expanded"
+             [class.datatable-icon-right]="!expanded"
+             [title]=" '::Orders:SeeProducts' | abpLocalization " href="javascript:void(0)">
+          </a>
         </ng-template>
       </ngx-datatable-column>
 
       <ngx-datatable-column [name]="'::Orders:Date' | abpLocalization" prop="creationTime">
         <ng-template let-value="value" ngx-datatable-cell-template>
           {{ value | date:'medium' }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column [name]="'::Orders:ClientName' | abpLocalization" prop="clientId" [sortable]="false">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          {{ getClientName(value) | async }}
         </ng-template>
       </ngx-datatable-column>
     </ngx-datatable>
