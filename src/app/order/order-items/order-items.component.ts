@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { ListService } from '@abp/ng.core';
 
 import { OrderItemDto, OrderService, ProductService } from '@proxy/orders';
-import { fetchWithCache } from '../../shared/fetch-with-cache';
+import { getWithCache } from '../../shared/get-with-cache';
 
 @Component({
   selector: 'app-order-items',
@@ -36,6 +36,6 @@ export class OrderItemsComponent implements OnInit {
   getProductName(productId: string): Observable<string> {
     const fetchObservable = this.productService.get(productId)
       .pipe(map(product => product.name));
-    return fetchWithCache(fetchObservable, this.productNames, productId);
+    return getWithCache(fetchObservable, this.productNames, productId);
   }
 }

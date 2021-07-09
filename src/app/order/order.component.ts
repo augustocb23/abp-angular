@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { ListService, PagedResultDto } from '@abp/ng.core';
 
 import { ClientService, OrderDto, OrderService } from '@proxy/orders';
-import { fetchWithCache } from '../shared/fetch-with-cache';
+import { getWithCache } from '../shared/get-with-cache';
 
 @Component({
   selector: 'app-order',
@@ -37,7 +37,7 @@ export class OrderComponent implements OnInit {
     const fetchObservable = this.clientService.get(clientId)
       .pipe(map(client => client.fullName));
 
-    return fetchWithCache(fetchObservable, this.clientNames, clientId);
+    return getWithCache(fetchObservable, this.clientNames, clientId);
   }
 
   toggleExpandRow(order: OrderDto) {
