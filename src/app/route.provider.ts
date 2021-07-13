@@ -28,14 +28,16 @@ function configureRoutes(routesService: RoutesService) {
         iconClass: 'far fa-clipboard',
         parentName: '::Menu:Orders',
         order: 0,
-        layout: eLayoutType.application
+        layout: eLayoutType.application,
+        requiredPolicy: 'Orders.Orders'
       },
       {
         path: '/clients',
         name: '::Menu:Clients:List',
         iconClass: 'fas fa-users',
         parentName: '::Menu:Orders',
-        layout: eLayoutType.application
+        layout: eLayoutType.application,
+        requiredPolicy: 'Orders.Clients'
       }
     ]);
   };
